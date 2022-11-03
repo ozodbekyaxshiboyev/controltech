@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ student.full_name }}{% endblock title %}
+
+{% block content %}
+    <br/>
+
+
+    <br>
+    <center><h3>Yangi yaratish</h3></center> <br>
+
+    <div class="jumbotron" style="background-color:darkgray">
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    {{ form.as_p }}
+        <br>
+        <br>
+    <input type="submit" value="Dayplan qo`shish">
+    </form>
+    </div>
+
+    <br>
+
+    <p>
+        <h3 style="color: saddlebrown"><center> Kun rejalari!</b> </center>   </h3>
+    </p>
+    {% if dayplans %}
+        <ul>
+        {% for plan in dayplans %}
+        <p>
+            <b style="color: #0a58ca"> {{ plan.created_at }} </b>  <h6>Maqsad: {{ plan.text }}</h6>
+        </p>
+            <hr>
+        {% endfor %}
+        </ul>
+        {% else %}
+        <center> No Dayplans</center>
+        <br>
+    {% endif %}
+
+    <a class="btn btn-info" href="{% url 'student' student_pk=student.pk %}" role="button">Kabinetga qaytish</a>
+
+
+{% endblock content %}

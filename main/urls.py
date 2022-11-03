@@ -4,8 +4,11 @@ from .views import (
     HomePageView,
     StudentView,
     StudentEditView,
-    StudentReportListCreate,
+
     studentReportListCreate,
+    studentDayplanListCreate,
+    student_tasks,
+    studentReachmentListCreate
 )
 
 
@@ -15,6 +18,9 @@ urlpatterns = [
     path('student/<int:student_pk>/', StudentView.as_view(), name='student'),
     path('student-profile/<int:student_pk>/', StudentEditView.as_view(), name='student_profile'),
     path('student/<int:student_pk>/reports/', studentReportListCreate, name='student_report'),
+    path('student/<int:student_pk>/dayplans/', studentDayplanListCreate, name='student_dayplan'),
+    path('student/<int:student_pk>/tasks/', student_tasks, name='student_task'),
+    path('student/<int:student_pk>/reachments/', studentReachmentListCreate, name='student_reachment'),
 
     # path('role/', RoleView.as_view(),name='role'),
     #

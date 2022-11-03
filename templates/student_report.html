@@ -5,13 +5,9 @@
 
 {% block content %}
     <br/>
-    <ul>
-    {% for report in reports %}
-    <li>
-        {{ report.created_at }}  KITOB: {{ report.book }}, SONI: {{ report.count }}, IZOH: {{ report.comment }}
-    </li>
-    {% endfor %}
-    </ul>
+
+
+        <hr><center><h3>Yangi yaratish</h3></center> <br>
 
     <div class="jumbotron" style="background-color:darkgray">
         <form method="post" enctype="multipart/form-data">{% csrf_token %}
@@ -22,7 +18,17 @@
     </form>
     </div>
 
-    <a class="btn btn-info" href="{% url 'home' %}" role="button">Kun rejasi qo`shish</a>
+    <hr><center><h3>Hisobotlar</h3></center> <br>
+        <ul>
+    {% for report in reports %}
+    <p>
+        <b style="color: #0a58ca"> {{ report.created_at }} </b>  SONI: {{ report.count }},  KITOB: {{ report.book }}, IZOH: {{ report.comment }}
+    </p>
+        <hr>
+    {% endfor %}
+    </ul>
+    <br>
+    <a class="btn btn-info" href="{% url 'student' student_pk=student.pk %}" role="button">Kabinetga qaytish</a>
 
 
 {% endblock content %}

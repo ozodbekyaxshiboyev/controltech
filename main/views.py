@@ -4,11 +4,12 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView,ListView,CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import DeleteView,UpdateView
-from .models import Report, ReportItem, Task, TaskResult, Chat
+from .models import Report, ReportItem, Task, TaskResult, Chat, Dayplan
 from accounts.models import User
 from accounts.enums import UserRoles
 from .models import Reachment
-from .forms import ReportForm
+from .forms import ReportForm, DayplanForm, ReachmentForm
+from django.db.models import Q, Sum
 
 
 
@@ -24,9 +25,15 @@ class HomePageView(ListView):
     def get_context_data(self, **kwargs):
         context = super(HomePageView, self).get_context_data(**kwargs)
         students = User.objects.filter(role=UserRoles.student.value)
-        reachments = Reachment.objects.filter(user__role=UserRoles.student.value)
+        reachments = Reachment.objects.filter(user__role=UserRoles.student.value).order_by('-pk')
+        counts = []
+        users = User.objects.filter(role=UserRoles.student.value)
+        for i in users:
+            count = Report.objects.filter(user=i).aggregate(Sum('count')).get('count__sum')
+            i.count=count
         context['students'] = students
         context['reachments'] = reachments
+        context['users'] = users
         return context
 
 
@@ -66,30 +73,30 @@ class StudentEditView(UpdateView):
         return reverse_lazy("student", kwargs={"student_pk": student.pk})
 
 
-class StudentReportListCreate(ListView, UpdateView):
-    template_name = 'student_report.html'
-    queryset = Report.objects.all()
-    fields = ['book','from_lesson','to_lesson','count','comment']
-    context_object_name = 'reports'
-
-    def get_object(self, queryset=None):
-        return self.request.user
-
-    def get_context_data(self, **kwargs):
-        # context = super(StudentReportListCreate, self).get_context_data(**kwargs)
-        context = dict()
-        student = self.get_object()
-        reports = Report.objects.filter(user=student)
-        context['student'] = student
-        context['reports'] = reports
-        return context
+# class StudentReportListCreate(ListView, UpdateView):
+#     template_name = 'student_report.html'
+#     queryset = Report.objects.all()
+#     fields = ['book','from_lesson','to_lesson','count','comment']
+#     context_object_name = 'reports'
+#
+#     def get_object(self, queryset=None):
+#         return self.request.user
+#
+#     def get_context_data(self, **kwargs):
+#         # context = super(StudentReportListCreate, self).get_context_data(**kwargs)
+#         context = dict()
+#         student = self.get_object()
+#         reports = Report.objects.filter(user=student).order_by()
+#         context['student'] = student
+#         context['reports'] = reports
+#         return context
 
 
 def studentReportListCreate(request,student_pk):
     if request.method == "GET":
         form = ReportForm()
         student = User.objects.get(pk=student_pk)
-        reports = Report.objects.filter(user=student)
+        reports = Report.objects.filter(user=student).order_by('-pk')
         context = dict()
         context['student'] = student
         context['reports'] = reports
@@ -105,6 +112,72 @@ def studentReportListCreate(request,student_pk):
             return redirect('student_report',student_pk=request.user.pk)
         else:
             return render(request, template_name='student_report.html', context={'form': report_form})
+
+def studentDayplanListCreate(request, student_pk):
+    if request.method == "GET":
+        form = DayplanForm()
+        student = User.objects.get(pk=student_pk)
+        dayplans = Dayplan.objects.filter(user=student).order_by('-pk')
+        context = dict()
+        context['student'] = student
+        context['dayplans'] = dayplans
+        context['form'] = form
+        return render(request, template_name='student_dayplan.html', context=context)
+    else:
+        dayplan_form = DayplanForm(data=request.POST)
+        if dayplan_form.is_valid():
+            dayplan_form.save(commit=False)
+            report = dayplan_form.instance
+            report.user = request.user
+            report.save()
+            return redirect('student_dayplan', student_pk=request.user.pk)
+        else:
+            return render(request, template_name='student_dayplan.html', context={'form': dayplan_form})
+
+
+def student_tasks(request,student_pk):
+    if request.method == "GET":
+        context = dict()
+        student = User.objects.get(pk=student_pk)
+        tasks = Task.objects.filter(Q(user=student) | Q(for_all_students=True)).order_by('-pk')
+        context['student'] = student
+        context['tasks'] = tasks
+        return render(request, template_name='student_task.html', context=context)
+
+def studentReachmentListCreate(request, student_pk):
+    if request.method == "GET":
+        form = ReachmentForm()
+        student = User.objects.get(pk=student_pk)
+        reachments = Reachment.objects.filter(user=student).order_by('-pk')
+        context = dict()
+        context['student'] = student
+        context['reachments'] = reachments
+        context['form'] = form
+        return render(request, template_name='student_reachment.html', context=context)
+    else:
+        reachment_form = ReachmentForm(data=request.POST)
+        if reachment_form.is_valid():
+            reachment_form.save(commit=False)
+            report = reachment_form.instance
+            report.user = request.user
+            report.save()
+            return redirect('student_reachment', student_pk=request.user.pk)
+        else:
+            return render(request, template_name='student_reachment.html', context={'form': reachment_form})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     # pk_url_kwarg = 'task_pk'
     #

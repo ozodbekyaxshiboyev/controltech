@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ student.full_name }}{% endblock title %}
+
+{% block content %}
+    <br/>
+    <p>
+        <h3 style="color: saddlebrown"><center> Barcha buyruqlar!</b> </center>   </h3>
+    </p>
+    {% if tasks %}
+        <ul>
+        {% for task in tasks %}
+        <p>
+                <h4><b style="color: black"> {{ task.created_at }} </b>:: {{ task.text }} </h4> by {{ task.creator.full_name }} <br>
+                {% if task.image %}
+                    <img class="rounded float-right" src="{{ task.image.url }}" alt="" width="50" height="50"  />
+                    <a href="{{ task.image.url }}" download><br> Rasmni  yuklab olish uchun </a>
+                {% endif %}
+
+                {% if task.source_file %}
+                    <a href="{{ task.source_file.url }}" download> <br>Faylni yuklab olish uchun  </a>
+                {% endif %}
+            <hr>
+            <hr>
+        </p>
+        {% endfor %}
+        </ul>
+        {% else %}
+        <center> Buyruqlar hozircha yuq, kuting!</center>
+        <br>
+    {% endif %}
+
+
+    <a class="btn btn-info" href="{% url 'student' student_pk=student.pk %}" role="button">Kabinetga qaytish</a>
+
+
+{% endblock content %}
+{##}
+{#    <h4>#}
+{#    {% for student in students %}#}
+{#    <li>#}
+{#    <div class="jumbotron" style="background-color:darkseagreen">#}
+{#        {% if student.image %}#}
+{#        <img class="rounded-circle" src="{{ student.image.url }}" alt="" width="240" height="240"  />#}
+{#        {% else %}#}
+{#        <img class="rounded-circle" src="{% static 'default.png' %}" alt="" width="240" height="240"  />#}
+{#        {% endif %}#}
+{#        {{ student.full_name }}#}
+{#    </div>#}
+{#    </li>#}
+{#    {% endfor %}#}
+{#    </h4>#}

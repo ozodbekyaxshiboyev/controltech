@@ -43,7 +43,7 @@ class Task(Basemodel):
     def clean(self):
         if self.creator.role == UserRoles.student.value:
             raise ValidationError({'Eslatma!': ('Taskni faqat boshqaruvchilar yaratishi mumkin!')})
-        if self.for_all_students and self.for_students:
+        if self.for_all_students and self.user:
             raise ValidationError({'Eslatma!': ('Yoki bitta studentni yoki hammasini belgilang!!')})
 
 

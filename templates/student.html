@@ -7,7 +7,7 @@
     <br/>
 
     <div class="jumbotron">
-          <h4 style="color: saddlebrown"><center> Buyruq! {{ task.user.full_name }}!</b> </center>   </h4>
+          <h4 style="color: saddlebrown"><center> Buyruq!</b> </center>   </h4>
           <p>
               <h4> {{ task.text }} </h4>
           </p>
@@ -29,13 +29,14 @@
     <br>
     <br>
     <br>
-    <a class="btn btn-primary" href="{% url 'student_report' student_pk=student.pk  %}" role="button">Hisobot qo`shish</a>
-    <a class="btn btn-info" href="{% url 'home' %}" role="button">Kun rejasi qo`shish</a>
+    <a class="btn btn-primary" href="{% url 'student_report' student_pk=student.pk  %}" role="button">Hisobotlar / qo`shish</a>
+    <a class="btn btn-info" href="{% url 'student_dayplan' student_pk=student.pk %}" role="button">Kun rejalar / qo`shish</a>
+    <a class="btn btn-danger" href="{% url 'student_task' student_pk=student.pk %}" role="button">Buyruqlar</a>
 
     <a class="btn btn-dark" href="{% url 'home' %}" role="button">Chatga o`tish</a>
 
     <div class="jumbotron">
-            <a class="btn btn-warning" href="{% url 'home' %}" role="button">Erishilgan natijani joylash</a>
+            <a class="btn btn-warning" href="{% url 'student_reachment' student_pk=student.pk  %}" role="button">Erishilgan natijalar / joylash</a>
     </div>
 
 

@@ -9,9 +9,9 @@
         <h3 class="display-4">You can speak with knowing the words</h3>
         <hr class="my-4">
         <p>Til bilgan el biladi</p>
-        <p class="lead">
-            <a class="btn btn-primary btn-lg" href="{% url 'signup' %}" role="button">Ro`yhatdan o`ting</a>
-        </p>
+{#        <p class="lead">#}
+{#            <a class="btn btn-primary btn-lg" href="{% url 'signup' %}" role="button">Ro`yhatdan o`ting</a>#}
+{#        </p>#}
     </div>
 
     <br>
@@ -59,6 +59,28 @@
     </h4>
 
     {% endif %}
+
+    <center> <h1 style="color:blue">SCORES OF OUR STUDENTS:</h1> </center>
+    <h4>
+        {% for user in users %}
+        <li>
+        <div class="jumbotron" style="background-color:cadetblue">
+            {% if user.image %}
+            <img class="rounded-circle" src="{{ user.image.url }}" alt="" width="200" height="200"  />
+            {% else %}
+            <img class="rounded-circle" src="{% static 'default.png' %}" alt="" width="200" height="200"  />
+            {% endif %}
+            {% if user.count %}
+                <center> <b>{{ user.full_name }} :  {{ user.count }} WORDS</b> </center>
+                {% else %}
+                <center> <b>{{ user.full_name }} :  0 WORDS</b> </center>
+            {% endif %}
+
+        </div>
+        </li>
+        {% endfor %}
+    </h4>
+
 
 
     <br>
