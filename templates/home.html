@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bosh sahifa{% endblock title %}
+
+{% block content %}
+    <br/>
+    <div class="jumbotron">
+        <h3 class="display-4">You can speak with knowing the words</h3>
+        <hr class="my-4">
+        <p>Til bilgan el biladi</p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{% url 'signup' %}" role="button">Ro`yhatdan o`ting</a>
+        </p>
+    </div>
+
+    <br>
+
+    <center><h1 style="color:#5aab19">OUR STUDENTS:</h1></center>
+
+    <br>
+    <h4>
+    {% for student in students %}
+    <li>
+    <div class="jumbotron" style="background-color:darkseagreen">
+        {% if student.image %}
+        <img class="rounded-circle" src="{{ student.image.url }}" alt="" width="240" height="240"  />
+        {% else %}
+        <img class="rounded-circle" src="{% static 'default.png' %}" alt="" width="240" height="240"  />
+        {% endif %}
+        {{ student.full_name }}
+    </div>
+    </li>
+    {% endfor %}
+    </h4>
+    <br>
+    <br>
+
+    {% if reachments %}
+
+            <center> <h1 style="color:blue">ACHIEVEMENTS OF OUR STUDENTS:</h1> </center>
+        <br>
+        <h4>
+        {% for reach in reachments %}
+        <li>
+        <div class="jumbotron" style="background-color:gold">
+            {% if reach.image %}
+            <img class="rounded float-right" src="{{ reach.image.url }}" alt="" width="200" height="200"  />
+            {% else %}
+            <img class="rounded float-right" src="{% static 'prize.png' %}" alt="" width="200" height="200"  />
+            {% endif %}
+            <center> <b>{{ reach.user.full_name }}</b> </center>
+            <br>
+            <br>
+            {{ reach.text }}
+        </div>
+        </li>
+        {% endfor %}
+    </h4>
+
+    {% endif %}
+
+
+    <br>
+    <br>
+
+{% endblock content %}

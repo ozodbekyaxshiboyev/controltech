@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ student.full_name }}{% endblock title %}
+
+{% block content %}
+    {% if student.image %}
+        <img class="rounded-circle" src="{{ student.image.url }}" alt="" width="240" height="240"  />
+        {% else %}
+        <img class="rounded-circle" src="{% static 'default.png' %}" alt="" width="240" height="240"  />
+        {% endif %}
+
+     <div class="jumbotron">
+
+    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    {{ form.as_p }}
+        <br>
+        <br>
+    <input type="submit" value="Profilni o`zgartirish">
+    </form>
+
+
+    </div>
+
+
+{% endblock content %}

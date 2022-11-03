@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ student.full_name }}{% endblock title %}
+
+{% block content %}
+    <br/>
+
+    <div class="jumbotron">
+          <h4 style="color: saddlebrown"><center> Buyruq! {{ task.user.full_name }}!</b> </center>   </h4>
+          <p>
+              <h4> {{ task.text }} </h4>
+          </p>
+            <p>
+                <h5 style="color: darkgreen">Kimdan: {{ task.creator.full_name }} </h5>
+            </p>
+    </div>
+
+        {% if student.image %}
+            <a href="{% url 'student_profile' student_pk=student.pk %}">
+        <img class="rounded-circle" src="{{ student.image.url }}" alt="" width="240" height="240"  /> </a>
+        {% else %}
+            <a href="{% url 'student_profile' student_pk=student.pk %}">
+        <img class="rounded-circle" src="{% static 'default.png' %}" alt="" width="240" height="240"  />  </a>
+        {% endif %}
+        {{ student.full_name }}
+
+
+    <br>
+    <br>
+    <br>
+    <a class="btn btn-primary" href="{% url 'student_report' student_pk=student.pk  %}" role="button">Hisobot qo`shish</a>
+    <a class="btn btn-info" href="{% url 'home' %}" role="button">Kun rejasi qo`shish</a>
+
+    <a class="btn btn-dark" href="{% url 'home' %}" role="button">Chatga o`tish</a>
+
+    <div class="jumbotron">
+            <a class="btn btn-warning" href="{% url 'home' %}" role="button">Erishilgan natijani joylash</a>
+    </div>
+
+
+{% endblock content %}

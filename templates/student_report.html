@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ student.full_name }}{% endblock title %}
+
+{% block content %}
+    <br/>
+    <ul>
+    {% for report in reports %}
+    <li>
+        {{ report.created_at }}  KITOB: {{ report.book }}, SONI: {{ report.count }}, IZOH: {{ report.comment }}
+    </li>
+    {% endfor %}
+    </ul>
+
+    <div class="jumbotron" style="background-color:darkgray">
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    {{ form.as_p }}
+        <br>
+        <br>
+    <input type="submit" value="Hisobot qo`shish">
+    </form>
+    </div>
+
+    <a class="btn btn-info" href="{% url 'home' %}" role="button">Kun rejasi qo`shish</a>
+
+
+{% endblock content %}
