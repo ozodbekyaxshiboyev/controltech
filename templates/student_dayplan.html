@@ -23,12 +23,12 @@
 
     <p>
         <h3 style="color: saddlebrown"><center> Kun rejalari!</b> </center>   </h3>
-    </p>
-    {% if dayplans %}
+        </p>
+        {% if dayplans %}
         <ul>
         {% for plan in dayplans %}
         <p>
-            <b style="color: #0a58ca"> {{ plan.created_at }} </b>  <h6>Maqsad: {{ plan.text }}</h6>
+            <b style="color: #0a58ca"> {{ plan.created_at }} </b>  Kun rejasi:<h6> {{ plan.text }}</h6>
         </p>
             <hr>
         {% endfor %}

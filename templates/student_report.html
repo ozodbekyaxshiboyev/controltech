@@ -5,7 +5,20 @@
 
 {% block content %}
     <br/>
-
+    <hr><center><h3>Unconfirmed reports</h3></center> <br>
+    {% if unreports %}
+        <ul>
+        {% for unreport in unreports %}
+            <p>
+                 <a href="{% url 'student_report_detail' student_pk=student.pk report_pk=unreport.pk %}"> <b style="color: #0a58ca"> {{ unreport.created_at }}</b> </a>
+                    count: <b>{{ unreport.count }}</b>,  book: <b>{{ unreport.book }}</b>, comment: <b>{{ unreport.comment }}</b>, similarity: <b>{{ unreport.similarity }} %</b>
+            </p>
+            <hr>
+        {% endfor %}
+        </ul>
+        {% else %}
+        No unconfirmed reports
+    {% endif %}
 
         <hr><center><h3>Yangi yaratish</h3></center> <br>
 
@@ -18,11 +31,12 @@
     </form>
     </div>
 
-    <hr><center><h3>Hisobotlar</h3></center> <br>
+    <hr><center><h3>Confirmed reports</h3></center> <br>
         <ul>
     {% for report in reports %}
     <p>
-        <b style="color: #0a58ca"> {{ report.created_at }} </b>  SONI: {{ report.count }},  KITOB: {{ report.book }}, IZOH: {{ report.comment }}
+         <a href="{% url 'student_report_detail' student_pk=student.pk report_pk=report.pk %}"> <b style="color: #0a58ca"> {{ report.created_at }}
+        </b> </a>    count: <b>{{ report.count }}</b>,  book: <b>{{ report.book }}</b>, comment: <b>{{ report.comment }}</b>, similarity: <b>{{ report.similarity }} %</b>
     </p>
         <hr>
     {% endfor %}

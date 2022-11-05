@@ -1,3 +1,4 @@
+import math
 from datetime import timezone
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
@@ -8,10 +9,10 @@ from .models import Report, ReportItem, Task, TaskResult, Chat, Dayplan
 from accounts.models import User
 from accounts.enums import UserRoles
 from .models import Reachment
-from .forms import ReportForm, DayplanForm, ReachmentForm
+from .forms import ReportForm, DayplanForm, ReachmentForm, TaskResultForm, ChatForm
 from django.db.models import Q, Sum
 
-
+from .services import translate
 
 
 class AboutView(TemplateView):
@@ -26,11 +27,11 @@ class HomePageView(ListView):
         context = super(HomePageView, self).get_context_data(**kwargs)
         students = User.objects.filter(role=UserRoles.student.value)
         reachments = Reachment.objects.filter(user__role=UserRoles.student.value).order_by('-pk')
-        counts = []
-        users = User.objects.filter(role=UserRoles.student.value)
-        for i in users:
-            count = Report.objects.filter(user=i).aggregate(Sum('count')).get('count__sum')
-            i.count=count
+        users = User.objects.filter(role=UserRoles.student.value).annotate(count=Sum('report__count'))
+        # users = User.objects.filter(role=UserRoles.student.value)
+        # for i in users:
+        #     count = Report.objects.filter(user=i).aggregate(Sum('count')).get('count__sum')
+        #     i.count=count
         context['students'] = students
         context['reachments'] = reachments
         context['users'] = users
@@ -49,10 +50,14 @@ class StudentView(DetailView):
         student_pk = self.kwargs["student_pk"]
         student = User.objects.get(pk=student_pk)
         reports = Report.objects.filter(user=student)
-        task = Task.objects.filter(user=student).last()
+        task_has = TaskResult.objects.filter(user=student).values('task_id')
+        tasks = Task.objects.filter(Q(user=student) | Q(for_all_students=True))
+        tasks = tasks.exclude(pk__in=task_has)
+        dayplan = Dayplan.objects.filter(user=student).last()
         context['student'] = student
         context['reachments'] = reports
-        context['task'] = task
+        context['tasks'] = tasks
+        context['dayplan'] = dayplan
         return context
 
     def get_object(self, queryset=None):
@@ -73,33 +78,19 @@ class StudentEditView(UpdateView):
         return reverse_lazy("student", kwargs={"student_pk": student.pk})
 
 
-# class StudentReportListCreate(ListView, UpdateView):
-#     template_name = 'student_report.html'
-#     queryset = Report.objects.all()
-#     fields = ['book','from_lesson','to_lesson','count','comment']
-#     context_object_name = 'reports'
-#
-#     def get_object(self, queryset=None):
-#         return self.request.user
-#
-#     def get_context_data(self, **kwargs):
-#         # context = super(StudentReportListCreate, self).get_context_data(**kwargs)
-#         context = dict()
-#         student = self.get_object()
-#         reports = Report.objects.filter(user=student).order_by()
-#         context['student'] = student
-#         context['reports'] = reports
-#         return context
-
 
 def studentReportListCreate(request,student_pk):
+    if request.user.pk is None or request.user.pk != student_pk:
+        return redirect('home')
     if request.method == "GET":
         form = ReportForm()
         student = User.objects.get(pk=student_pk)
-        reports = Report.objects.filter(user=student).order_by('-pk')
+        reports = Report.objects.filter(user=student,is_verifyed=True).order_by('-pk')
+        unreports = Report.objects.filter(user=student,is_verifyed=False).order_by('-pk')
         context = dict()
         context['student'] = student
         context['reports'] = reports
+        context['unreports'] = unreports
         context['form'] = form
         return render(request, template_name='student_report.html', context=context)
     else:
@@ -109,11 +100,38 @@ def studentReportListCreate(request,student_pk):
             report = report_form.instance
             report.user = request.user
             report.save()
+            """
+            This is translation block
+            """
+            report = Report.objects.last()
+            print(report.words)
+            new = report.words.split(sep=',')
+            print(new)
+            words = report.words.replace("\n"," ")
+            words = report.words.replace("\r"," ")
+            words = [i.strip().lower() for i in words.split(sep=',')]
+            print(words)
+            print(len(words))
+            all_word = len(words)
+            count = 0
+            for word in words:
+                translation = translate(word)
+                similar = ReportItem.objects.filter(word=word)
+                if similar:
+                    count += 1
+                ReportItem.objects.create(user=report.user, report=report, word=word, word_translation=translation)
+            similarity = (count / all_word) * 100
+            report.count = all_word
+            report.similarity = math.floor(similarity)
+            report.save()
+            # Translation block end
             return redirect('student_report',student_pk=request.user.pk)
         else:
             return render(request, template_name='student_report.html', context={'form': report_form})
 
 def studentDayplanListCreate(request, student_pk):
+    if request.user.pk is None or request.user.pk != student_pk:
+        return redirect('home')
     if request.method == "GET":
         form = DayplanForm()
         student = User.objects.get(pk=student_pk)
@@ -136,6 +154,8 @@ def studentDayplanListCreate(request, student_pk):
 
 
 def student_tasks(request,student_pk):
+    if request.user.pk is None or request.user.pk != student_pk:
+        return redirect('home')
     if request.method == "GET":
         context = dict()
         student = User.objects.get(pk=student_pk)
@@ -145,6 +165,8 @@ def student_tasks(request,student_pk):
         return render(request, template_name='student_task.html', context=context)
 
 def studentReachmentListCreate(request, student_pk):
+    if request.user.pk is None or request.user.pk != student_pk:
+        return redirect('home')
     if request.method == "GET":
         form = ReachmentForm()
         student = User.objects.get(pk=student_pk)
@@ -166,9 +188,53 @@ def studentReachmentListCreate(request, student_pk):
             return render(request, template_name='student_reachment.html', context={'form': reachment_form})
 
 
+def taskresultview(request,student_pk, task_pk):
+    if request.user.pk is None or request.user.pk != student_pk:
+        return redirect('home')
+    if request.method == "GET":
+        form = TaskResultForm()
+        student = User.objects.get(pk=student_pk)
+        taskresults = TaskResult.objects.filter(task__pk=task_pk,user=student).all()
+        print(taskresults)
+        context = dict()
+        context['student'] = student
+        context['task_pk'] = task_pk
+        context['taskresults'] = taskresults
+        context['form'] = form
+        return render(request, template_name='task_result.html', context=context)
+    else:
+        data=request.POST
+        print(data)
+        text = data.get('text')
+        task_pk = data.get('task_pk')
+        if text and task_pk:
+            TaskResult.objects.create(task=Task.objects.get(pk=task_pk),user=request.user,text=text)
+        return redirect('student', student_pk=request.user.pk)
 
 
-
+def chat(request,person_pk):
+    person = User.objects.get(pk=person_pk)
+    if request.user.pk is None or request.user.pk != person_pk:
+        return redirect('home')
+    if request.method == "GET":
+        form = ChatForm()
+        person = User.objects.get(pk=person_pk)
+        chats = Chat.objects.all()[:30]
+        context = dict()
+        context['chats'] = chats
+        context['person'] = person
+        context['form'] = form
+        return render(request, template_name='chat.html', context=context)
+    else:
+        chat_form = ChatForm(data=request.POST)
+        if chat_form.is_valid():
+            chat_form.save(commit=False)
+            report = chat_form.instance
+            report.user = request.user
+            report.save()
+            return redirect('student_chat',person_pk=request.user.pk)
+        else:
+            return render(request, template_name='chat.html', context={'form': chat_form})
 
 
 
@@ -187,6 +253,54 @@ def studentReachmentListCreate(request, student_pk):
     #         lesson_pk = self.kwargs["lesson_pk"]
     #         task_pk = self.kwargs["task_pk"]
     #         return reverse_lazy("taskdetail", kwargs={"pk": pk,'lesson_pk':lesson_pk,'task_pk':task_pk})
+
+
+
+def studentReportdetailview(request,student_pk, report_pk):
+    if request.user.pk is None or request.user.pk != student_pk:
+        return redirect('home')
+    if request.method == "GET":
+        student = User.objects.get(pk=student_pk)
+        report = Report.objects.get(pk=report_pk)
+        reportitems = ReportItem.objects.filter(report=report,user=student).all()
+        context = dict()
+        context['student'] = student
+        context['report'] = report
+        context['reportitems'] = reportitems
+        return render(request, template_name='student_report_detail.html', context=context)
+
+def reportdeleteview(request,student_pk, report_pk):
+    if request.user.pk is None or request.user.pk != student_pk:
+        return redirect('home')
+    student = User.objects.get(pk=student_pk)
+    report = Report.objects.get(pk=report_pk)
+    report.delete()
+    return redirect("student_report", student_pk=student.pk)  #bu boshqa viewni ishlatadi  shuning uchun ma`lumot junatish shart emas
+
+def chatdelete(request, person_pk, chat_pk):
+    if request.user.pk is None or request.user.pk != person_pk:
+        return redirect('home')
+    user = User.objects.get(pk=person_pk)
+    chat = Chat.objects.get(pk=chat_pk)
+    chat.delete()
+    return redirect("student_chat", person_pk=user.pk)
+
+    # def get_success_url(self):
+    #     student = self.get_object()
+    #     return reverse_lazy("student", kwargs={"student_pk": student.pk})  bu klas modeli bor uchun chuniki qayta ma`lumot junatish kerak
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # class RoleView(ListView):

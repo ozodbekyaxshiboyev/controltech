@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ student.full_name }}{% endblock title %}
+
+{% block content %}
+    <br/>
+    <a class="btn btn-info" href="{% url 'student' student_pk=student.pk %}" role="button">Kabinetga qaytish</a>
+    {% if report.is_verifyed %}
+        <b>Status: Confirmed</b>
+    {% else %}
+        <b>Status: Unconfirmed</b>
+        <a class="btn btn-danger" href="{% url 'report_delete' student_pk=student.pk report_pk=report.pk %}" role="button">Delete this report</a>
+    {% endif %}
+
+        <hr><center><h3>Report words : {{ reportitems.count }}</h3></center> <br>
+
+
+        <ul>
+    {% for item in reportitems %}
+    <p>
+        <b>{{ item.word }}</b> ---  {{ item.word_translation }}
+    </p>
+{#        <hr>#}
+    {% endfor %}
+    </ul>
+
+    <br>
+
+
+
+{% endblock content %}

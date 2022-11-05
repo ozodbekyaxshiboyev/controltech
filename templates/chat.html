@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ student.full_name }}{% endblock title %}
+
+{% block content %}
+    <br/>
+        <center><h3>Suhbatlar</h3></center> <br>
+        {% if chats %}
+        {% for chat in chats %}
+            <b style="color: #0a58ca"> {{ chat.created_at }} </b>  {{ chat.user.full_name }}, <h4>{{ chat.text }}</h4>
+            {% if chat.source_file %}
+            <a class="btn btn-info" href="{{ chat.source_file.url }}" download> <br>Fayl mavjud</a>
+            {% endif %}
+
+            {% if chat.user.pk == person.pk %}
+            <a class="btn btn-warning" href="{% url 'chat_delete' person_pk=person.pk chat_pk=chat.pk %}" role="button">Delete message</a>
+            {% endif %}
+            <hr>
+        {% endfor %}
+        {% else %}
+                Chatlar yuq!
+        {% endif %}
+
+        <center><h3>Yangi yaratish</h3></center> <br>
+
+    <div class="jumbotron" style="background-color:darkgray">
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    {{ form.as_p }}
+        <br>
+        <br>
+    <input type="submit" value="Yuborish">
+    </form>
+    </div>
+
+
+    <br>
+    {% if person.role == 'student' %}
+    <a class="btn btn-info" href="{% url 'student' student_pk=person.pk %}" role="button">Kabinetga qaytish</a>
+    {% else %}
+        Qo`shish kerak
+    {% endif %}
+
+{% endblock content %}

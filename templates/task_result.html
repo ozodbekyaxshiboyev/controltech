@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ student.full_name }}{% endblock title %}
+
+{% block content %}
+    <br/>
+
+    <p>
+        <h3 style="color: saddlebrown"><center> Ushbu buyruqga javoblar!</b> </center>   </h3>
+        </p>
+        {% if taskresults %}
+        <ul>
+        {% for result in taskresults %}
+        <p>
+            <b style="color: #0a58ca"> {{ result.created_at }} </b>  <h4> >>> {{ result.text }}</h4>
+        </p>
+            <hr>
+        {% endfor %}
+        </ul>
+        {% else %}
+        <center> Javob berilmagan!</center>
+        <br>
+    {% endif %}
+
+        <hr><center><h3>Javob yozish</h3></center> <br>
+
+    <div class="jumbotron" style="background-color:darkgray">
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+{#    {{ form.as_p }}#}
+            <input type="text" name="text">
+            <input type="hidden" name="task_pk" value="{{ task_pk }}">
+        <br>
+        <br>
+    <input type="submit" value="Javob yuborish">
+
+
+
+    <br>
+    <a class="btn btn-info" href="{% url 'student' student_pk=student.pk %}" role="button">Kabinetga qaytish</a>
+
+
+{% endblock content %}

@@ -12,7 +12,8 @@
         <ul>
         {% for task in tasks %}
         <p>
-                <h4><b style="color: black"> {{ task.created_at }} </b>:: {{ task.text }} </h4> by {{ task.creator.full_name }} <br>
+            <a href="{% url 'task_answer' student.pk task.pk %}"><h4 style="color: #04414d"> {{ task.created_at }}</h4></a>
+                <h4>{{ task.text }} </h4> by {{ task.creator.full_name }} <br>
                 {% if task.image %}
                     <img class="rounded float-right" src="{{ task.image.url }}" alt="" width="50" height="50"  />
                     <a href="{{ task.image.url }}" download><br> Rasmni  yuklab olish uchun </a>

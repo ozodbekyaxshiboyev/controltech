@@ -8,7 +8,12 @@ from .views import (
     studentReportListCreate,
     studentDayplanListCreate,
     student_tasks,
-    studentReachmentListCreate
+    studentReachmentListCreate,
+    taskresultview,
+    chat,
+    studentReportdetailview,
+    reportdeleteview,
+    chatdelete
 )
 
 
@@ -18,9 +23,15 @@ urlpatterns = [
     path('student/<int:student_pk>/', StudentView.as_view(), name='student'),
     path('student-profile/<int:student_pk>/', StudentEditView.as_view(), name='student_profile'),
     path('student/<int:student_pk>/reports/', studentReportListCreate, name='student_report'),
+    path('student/<int:student_pk>/reports/<int:report_pk>/', studentReportdetailview, name='student_report_detail'),
+    path('student/<int:student_pk>/reports/<int:report_pk>/delete/', reportdeleteview,name='report_delete'),
+
     path('student/<int:student_pk>/dayplans/', studentDayplanListCreate, name='student_dayplan'),
     path('student/<int:student_pk>/tasks/', student_tasks, name='student_task'),
     path('student/<int:student_pk>/reachments/', studentReachmentListCreate, name='student_reachment'),
+    path('student/<int:student_pk>/taskansver/<int:task_pk>/', taskresultview, name='task_answer'),
+    path('student/<int:person_pk>/chat/', chat, name='student_chat'),
+    path('student/<int:person_pk>/chat/<int:chat_pk>/', chatdelete, name='chat_delete'),
 
     # path('role/', RoleView.as_view(),name='role'),
     #

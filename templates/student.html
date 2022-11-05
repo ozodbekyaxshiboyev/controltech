@@ -6,15 +6,18 @@
 {% block content %}
     <br/>
 
-    <div class="jumbotron">
-          <h4 style="color: saddlebrown"><center> Buyruq!</b> </center>   </h4>
-          <p>
-              <h4> {{ task.text }} </h4>
-          </p>
-            <p>
+    <div class="radio-inline" style="background-color: #b9b9b9">
+        {% for task in tasks %}
+            <a href="{% url 'task_answer' student.pk task.pk %}"><h4 style="color: #04414d"><center> Buyruq! {{ task.created_at }} </b> </center>  </h4></a>
+               <h4> {{ task.text }} </h4>
                 <h5 style="color: darkgreen">Kimdan: {{ task.creator.full_name }} </h5>
-            </p>
+            <hr>
+        {% endfor %}
+
+
     </div>
+
+    <hr>
 
         {% if student.image %}
             <a href="{% url 'student_profile' student_pk=student.pk %}">
@@ -23,8 +26,16 @@
             <a href="{% url 'student_profile' student_pk=student.pk %}">
         <img class="rounded-circle" src="{% static 'default.png' %}" alt="" width="240" height="240"  />  </a>
         {% endif %}
-        {{ student.full_name }}
-
+        <b>{{ student.full_name }}</b>
+    <hr>
+    {% if dayplan %}
+        (Kun rejangiz): <h3>{{ dayplan.text }} </h3>
+    {% endif %}
+    <hr>
+    {% if student.bio %}
+        (Shioringiz): <h3>{{ student.bio }} </h3>
+    {% endif %}
+    <hr>
 
     <br>
     <br>
@@ -33,11 +44,11 @@
     <a class="btn btn-info" href="{% url 'student_dayplan' student_pk=student.pk %}" role="button">Kun rejalar / qo`shish</a>
     <a class="btn btn-danger" href="{% url 'student_task' student_pk=student.pk %}" role="button">Buyruqlar</a>
 
-    <a class="btn btn-dark" href="{% url 'home' %}" role="button">Chatga o`tish</a>
+    <a class="btn btn-dark" href="{% url 'student_chat' person_pk=student.pk %}" role="button">Chatga o`tish</a>
 
-    <div class="jumbotron">
+{#    <div class="jumbotron">#}
             <a class="btn btn-warning" href="{% url 'student_reachment' student_pk=student.pk  %}" role="button">Erishilgan natijalar / joylash</a>
-    </div>
+{#    </div>#}
 
 
 {% endblock content %}

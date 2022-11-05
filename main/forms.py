@@ -5,6 +5,16 @@ from .models import (
     Task, TaskResult, Chat,Dayplan, Reachment)
 
 
+class TaskResultForm(forms.ModelForm):
+    class Meta:
+        model=TaskResult
+        fields = ('text',)
+
+
+class ChatForm(forms.ModelForm):
+    class Meta:
+        model=Chat
+        fields = ('text','source_file',)
 
 class DayplanForm(forms.ModelForm):
     class Meta:
@@ -21,7 +31,7 @@ class ReachmentForm(forms.ModelForm):
 class ReportForm(forms.ModelForm):
     class Meta:
         model=Report
-        fields = ('book','from_lesson','to_lesson','count','comment')
+        fields = ('book','from_lesson','to_lesson','count','words','comment')
         # widgets = {'book':"textInput form-control"}
         # widgets = {
         #     'comment': TextInput(attrs={'cols': 200, 'rows': 20}),
