@@ -13,13 +13,19 @@ from .views import (
     chat,
     studentReportdetailview,
     reportdeleteview,
-    chatdelete
+    chatdelete,
+    ManagerView,
+    ManagerEditView,
+    RoleView
 )
 
 
 urlpatterns = [
     path('', HomePageView.as_view(),name='home'),
     path('about/', AboutView.as_view(),name='about'),
+
+    path('role/', RoleView.as_view(), name='role'),
+
     path('student/<int:student_pk>/', StudentView.as_view(), name='student'),
     path('student-profile/<int:student_pk>/', StudentEditView.as_view(), name='student_profile'),
     path('student/<int:student_pk>/reports/', studentReportListCreate, name='student_report'),
@@ -32,6 +38,12 @@ urlpatterns = [
     path('student/<int:student_pk>/taskansver/<int:task_pk>/', taskresultview, name='task_answer'),
     path('student/<int:person_pk>/chat/', chat, name='student_chat'),
     path('student/<int:person_pk>/chat/<int:chat_pk>/', chatdelete, name='chat_delete'),
+
+    path('manager/<int:manager_pk>/', ManagerView.as_view(), name='manager'),
+    path('manager-profile/<int:manager_pk>/', ManagerEditView.as_view(), name='manager_profile'),
+    path('manager/<int:manager_pk>/report/<int:report_pk>/', studentReportdetailview, name='student_report_detail'),
+    path('manager/<int:manager_pk>/report/<int:report_pk>/confirm/', reportdeleteview, name='manager_report_confirm'),
+    path('manager/<int:manager_pk>/report/<int:report_pk>/delete/', reportdeleteview, name='report_delete'),
 
     # path('role/', RoleView.as_view(),name='role'),
     #

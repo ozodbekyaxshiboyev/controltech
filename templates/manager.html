@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ manager.full_name }}{% endblock title %}
+
+{% block content %}
+    <br/>
+            <h3><center> Tasdiqlanishi kutilayotgan hisobotlar: </center></h3>
+    <hr>
+    {% if reports %}
+    {% else %}
+        Tasdiqlanishi kutilayotgan hisobotlar yuq
+    {% endif %}
+
+    <div class="radio-inline" style="background-color: #b9b9b9">
+        {% for report in reports %}
+            <a href="" style="color: #04414d">{{ report.created_at }}</a>
+                <h5 style="color: darkgreen">Kimdan: {{ report.user.full_name }} </h5>
+            <hr>
+        {% endfor %}
+    </div>
+    <hr>
+
+        {% if manager.image %}
+            <a href="{% url 'manager_profile' manager_pk=manager.pk %}">
+        <img class="rounded-circle" src="{{ manager.image.url }}" alt="" width="240" height="240"  /> </a>
+        {% else %}
+            <a href="{% url 'manager_profile' manager_pk=manager.pk %}">
+        <img class="rounded-circle" src="{% static 'default.png' %}" alt="" width="240" height="240"  />  </a>
+        {% endif %}
+        <b>{{ manager.full_name }}</b>
+    <hr>
+    {% if manager.bio %}
+        (Shioringiz): <h3>{{ manager.bio }} </h3>
+    {% endif %}
+    <hr>
+
+    <br>
+    <br>
+    <br>
+    <a class="btn btn-primary" href="" role="button">Hisobotlar / qo`shish</a>
+    <a class="btn btn-info" href="" role="button">Kun rejalar / qo`shish</a>
+    <a class="btn btn-danger" href="" role="button">Buyruqlar</a>
+
+    <a class="btn btn-dark" href="" role="button">Chatga o`tish</a>
+
+{#    <div class="jumbotron">#}
+            <a class="btn btn-warning" href="" role="button">Erishilgan natijalar / joylash</a>
+{#    </div>#}
+
+
+{% endblock content %}

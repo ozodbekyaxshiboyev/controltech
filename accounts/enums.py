@@ -2,8 +2,7 @@ from enum import Enum
 
 
 class UserRoles(Enum):
-    maincontroller = 'maincontroller'
-    controller = 'controller'
+    manager = 'manager'
     student = 'student'
     family = 'family'
 

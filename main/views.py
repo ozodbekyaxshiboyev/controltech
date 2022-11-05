@@ -290,13 +290,56 @@ def chatdelete(request, person_pk, chat_pk):
     #     return reverse_lazy("student", kwargs={"student_pk": student.pk})  bu klas modeli bor uchun chuniki qayta ma`lumot junatish kerak
 
 
+class RoleView(ListView):
+    template_name = 'role.html'
+    context_object_name = 'user'
+
+    def get_queryset(self):
+        return self.request.user
 
 
+class ManagerView(DetailView):
+    template_name = 'manager.html'
+    context_object_name = 'context'
+    pk_url_kwarg = 'manager_pk'
+
+    def get_context_data(self, **kwargs):
+        context = super(ManagerView, self).get_context_data(**kwargs)
+        manager_pk = self.kwargs["manager_pk"]
+        manager = User.objects.get(pk=manager_pk)
+        reports = Report.objects.filter(is_verifyed=False)
+        context['manager'] = manager
+        context['reports'] = reports
+        return context
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
+class ManagerEditView(UpdateView):
+    template_name = 'manager_profile.html'
+    context_object_name = 'manager'
+    fields = ('username','first_name','last_name','age','bio','image')
+    pk_url_kwarg = 'manager_pk'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_success_url(self):
+        manager = self.get_object()
+        return reverse_lazy("manager", kwargs={"manager_pk": manager.pk})
 
 
-
+def Managerreportview(request, manager_pk, report_pk):
+    if request.method == "GET":
+        manager = User.objects.get(pk=manager_pk)
+        report = Report.objects.get(pk=report_pk)
+        reportitems = ReportItem.objects.filter(report=report).all()
+        context = dict()
+        context['manager'] = manager
+        context['report'] = report
+        context['reportitems'] = reportitems
+        return render(request, template_name='manager_report_detail.html', context=context)
 
 
 

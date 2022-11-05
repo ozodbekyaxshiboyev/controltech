@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Bosh sahifa{% endblock title %}
+{% block title %}Role{% endblock title %}
 
 {% block content %}
     <br/>
@@ -10,24 +10,25 @@
         <hr class="my-4">
         <p>Sizda shu yerda ko’rsatilgan barcha rollarga kirish huquqi mavjud.
 Biror rolni tanlab jarayonni davom ettirishingiz mumkin</p>
-        <p class="lead">
-            <a class="btn btn-primary btn-lg" href="{% url 'student' %}" role="button">STUDENT</a>
-        </p>
 
-
-        {% if course_assestant %}
-               <p class="lead">
-                <a class="btn btn-primary btn-lg" href="{% url 'assistant' %}" role="button">ASSESTANT</a>
-        </p>
-        {% endif %}
-
-
-
-        {% if user.is_superuser %}
+        {% if user.role == "student" %}
             <p class="lead">
-            <a class="btn btn-primary btn-lg" href="{% url 'mentor' %}" role="button">MENTOR</a>
-        </p>
+            <a class="btn btn-primary btn-lg" href="{% url 'student'  student_pk=user.pk %}" role="button">STUDENT</a>
+            </p>
         {% endif %}
+
+        {% if user.role == "manager" %}
+            <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{% url 'manager'  manager_pk=user.pk %}" role="button">MANAGER</a>
+            </p>
+        {% endif %}
+
+        {% if user.role == "family" %}
+            <p class="lead">
+            <a class="btn btn-primary btn-lg" href="" role="button">FAMILY</a>
+            </p>
+        {% endif %}
+
 
     </div>
 

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ manager.full_name }}{% endblock title %}
+
+{% block content %}
+    <br/>
+    <a class="btn btn-info" href="{% url 'manager' manager_pk=manager.pk %}" role="button">Kabinetga qaytish</a>
+    {% if report.is_verifyed %}
+        <b>Status: Confirmed</b>
+    {% else %}
+        <b>Status: Unconfirmed</b>
+        <a class="btn btn-danger" href="{% url 'manager_report_confirm' manager_pk=manager.pk report_pk=report.pk %}" role="button">Confirm</a>
+    {% endif %}
+
+        <hr><center><h3>Report words : {{ reportitems.count }}</h3></center> <br>
+
+
+        <ul>
+    {% for item in reportitems %}
+    <p>
+        <b>{{ item.word }}</b> ---  {{ item.word_translation }}
+    </p>
+{#        <hr>#}
+    {% endfor %}
+    </ul>
+
+    <br>
+
+
+
+{% endblock content %}
