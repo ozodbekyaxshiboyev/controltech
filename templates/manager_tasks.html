@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ manager.full_name }}{% endblock title %}
+
+{% block content %}
+    <br/>
+    <center><h3>Yangi yaratish</h3></center> <br>
+    <div class="jumbotron" style="background-color:darkgray">
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    {{ form.as_p }}
+        <br>
+    <input type="submit" value="Buyruqni qo`shish">
+    </form>
+    </div>
+    <p>
+        <h3 style="color: saddlebrown"><center> Sizning barcha buyruqlaringiz!</b> </center>   </h3>
+    </p>
+    {% if tasks %}
+        <ul>
+        {% for task in tasks %}
+        <p>
+            <a href="{% url 'manager_task_result' manager_pk=manager.pk task_pk=task.pk  %}"><h4 style="color: #04414d"> {{ task.created_at }}</h4></a>
+                <h4>{{ task.text }} </h4>
+            {% if task.for_all_students %}
+                Kimga: Barcha talabalar uchun
+                {% else %}
+                Kimga: {{ task.user.full_name }} uchun
+            {% endif %}
+            <br>
+                {% if task.image %}
+                    <img class="rounded float-right" src="{{ task.image.url }}" alt="" width="50" height="50"  />
+                    <a href="{{ task.image.url }}" download><br> Rasmni  yuklab olish uchun </a>
+                {% endif %}
+
+                {% if task.source_file %}
+                    <a href="{{ task.source_file.url }}" download> <br>Faylni yuklab olish uchun  </a>
+                {% endif %}
+            <hr>
+            <hr>
+        </p>
+        {% endfor %}
+        </ul>
+        {% else %}
+        <center> Buyruqlar hozircha yuq, kuting!</center>
+        <br>
+    {% endif %}
+
+
+    <a class="btn btn-info" href="{% url 'manager' manager_pk=manager.pk %}" role="button">Kabinetga qaytish</a>
+
+
+{% endblock content %}

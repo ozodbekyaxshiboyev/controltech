@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, AbstractUser
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 from .enums import UserRoles
+from .managers import StudentsManager
 from .services import location_image,validate_image,custom_validator
 
 
@@ -26,4 +27,11 @@ class User(AbstractUser):
         return f"{self.first_name} {self.last_name}"
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f" {self.role} {self.full_name}"
+
+
+class Student(User):
+    objects = StudentsManager()
+
+    class Meta:
+        proxy = True

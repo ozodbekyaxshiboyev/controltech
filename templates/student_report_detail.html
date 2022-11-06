@@ -13,6 +13,9 @@
         <a class="btn btn-danger" href="{% url 'report_delete' student_pk=student.pk report_pk=report.pk %}" role="button">Delete this report</a>
     {% endif %}
 
+    <hr>{{ report.created_at }}
+     <br><b>Comment:</b> {{ report.comment }}
+
         <hr><center><h3>Report words : {{ reportitems.count }}</h3></center> <br>
 
 

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ manager.full_name }}{% endblock title %}
+
+{% block content %}
+    <center><h3>{{ student.full_name }}ning barcha hisobotlari: </h3></center> <br>
+    <br/>
+    <hr><center><h4>Tasdiqlanmagan hisobotlar</h4></center> <br>
+    {% if unreports %}
+        <ul>
+        {% for unreport in unreports %}
+            <p>
+                <a href="{% url 'manager_report_detail' manager_pk=manager.pk report_pk=unreport.pk %}"> <b style="color: #0a58ca"> {{ unreport.created_at }}</b> </a>
+                count: <b>{{ unreport.count }}</b> |  book: <b>{{ unreport.book }}</b> | similarity: <b>{{ unreport.similarity }} %</b>
+            </p>
+
+        {% endfor %}
+        </ul>
+        {% else %}
+        Tasdiqlanmagan hisobotlar yuq
+    {% endif %}
+
+
+    <hr><center><h4>Tasdiqlangan hisobotlar</h4></center> <br>
+        <ul>
+    {% for report in reports %}
+    <p>
+         <a href="{% url 'manager_report_detail' manager_pk=manager.pk report_pk=report.pk %}"> <b style="color: #0a58ca"> {{ report.created_at }}
+        </b> </a>    count: <b>{{ report.count }}</b> |  book: <b>{{ report.book }}</b>  | similarity: <b>{{ report.similarity }} %</b>
+    </p>
+        <hr>
+    {% endfor %}
+    </ul>
+    <br>
+    <a class="btn btn-info" href="{% url 'manager' manager_pk=manager.pk %}" role="button">Kabinetga qaytish</a>
+
+
+{% endblock content %}

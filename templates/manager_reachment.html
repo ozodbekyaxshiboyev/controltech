@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ manager.full_name }}{% endblock title %}
+
+{% block content %}
+    <br/>
+
+
+    <hr>
+    <center><h3>Yangi yaratish</h3></center> <br>
+    <div class="jumbotron" style="background-color:darkgray">
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+    {{ form.as_p }}
+        <br>
+    <input type="submit" value="Yutuqni qo`shish">
+    </form>
+    </div>
+
+    <hr><br>
+
+    <p>
+        <h3 style="color: saddlebrown"><center> Erishilgan marralar!</b> </center>   </h3>
+    </p>
+    {% if reachments %}
+        <h4>
+        {% for reach in reachments %}
+        <li>
+        <div class="jumbotron" style="background-color:gold">
+            {% if reach.image %}
+            <img class="rounded float-right" src="{{ reach.image.url }}" alt="" width="130" height="130"  />
+            {% else %}
+            <img class="rounded float-right" src="{% static 'prize.png' %}" alt="" width="130" height="130"  />
+            {% endif %}
+            <center> <b>{{ reach.created_at }} | {{ reach.user.full_name }}</b> </center>
+            <br>
+            <br>
+            {{ reach.text }}
+        </div>
+        </li>
+        {% endfor %}
+    </h4>
+        {% else %}
+        <center> Yutuqlar hozircha yuq, tezlashish kerak! </center>
+        <br>
+    {% endif %}
+
+    <a class="btn btn-info" href="{% url 'manager' manager_pk=manager.pk %}" role="button">Kabinetga qaytish</a>
+
+
+{% endblock content %}

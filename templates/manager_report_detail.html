@@ -7,11 +7,17 @@
     <br/>
     <a class="btn btn-info" href="{% url 'manager' manager_pk=manager.pk %}" role="button">Kabinetga qaytish</a>
     {% if report.is_verifyed %}
-        <b>Status: Confirmed</b>
+        <b>Report status: Confirmed</b>
     {% else %}
-        <b>Status: Unconfirmed</b>
-        <a class="btn btn-danger" href="{% url 'manager_report_confirm' manager_pk=manager.pk report_pk=report.pk %}" role="button">Confirm</a>
+        <b>Report status: Unconfirmed</b>
+        <a class="btn btn-primary" href="{% url 'manager_report_confirm' manager_pk=manager.pk report_pk=report.pk %}" role="button">Hisobotni maqullash</a>
+        <a class="btn btn-danger" href="{% url 'manager_report_delete' manager_pk=manager.pk report_pk=report.pk %}" role="button">Hisobotni rad etish(uchirish)</a>
     {% endif %}
+    <hr>
+        {{ report.created_at }}
+                <h5 style="color: darkgreen">Kimdan: {{ report.user.full_name }} </h5>
+    count: <b>{{ report.count }}</b> |  book: <b>{{ report.book }}</b> | From lesson: {{ report.from_lesson }} | To lesson: {{ report.to_lesson }} | similarity: <b>{{ report.similarity }} %</b>
+     <br><b>Comment:</b> {{ report.comment }}
 
         <hr><center><h3>Report words : {{ reportitems.count }}</h3></center> <br>
 

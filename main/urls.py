@@ -16,7 +16,14 @@ from .views import (
     chatdelete,
     ManagerView,
     ManagerEditView,
-    RoleView
+    RoleView,
+    Managerreportview,
+    managerreportconfirm,
+    managerreportdelete,
+mentorReachmentListCreate,
+mentortaskListCreate,
+mentortaskresultview,
+mentorReportList
 )
 
 
@@ -41,9 +48,14 @@ urlpatterns = [
 
     path('manager/<int:manager_pk>/', ManagerView.as_view(), name='manager'),
     path('manager-profile/<int:manager_pk>/', ManagerEditView.as_view(), name='manager_profile'),
-    path('manager/<int:manager_pk>/report/<int:report_pk>/', studentReportdetailview, name='student_report_detail'),
-    path('manager/<int:manager_pk>/report/<int:report_pk>/confirm/', reportdeleteview, name='manager_report_confirm'),
-    path('manager/<int:manager_pk>/report/<int:report_pk>/delete/', reportdeleteview, name='report_delete'),
+    path('manager/<int:manager_pk>/report/<int:report_pk>/', Managerreportview, name='manager_report_detail'),
+    path('manager/<int:manager_pk>/report/<int:report_pk>/confirm/', managerreportconfirm, name='manager_report_confirm'),
+    path('manager/<int:manager_pk>/report/<int:report_pk>/delete/', managerreportdelete, name='manager_report_delete'),
+    path('manager/<int:person_pk>/chat/', chat, name='manager_chat'),
+    path('manager/<int:manager_pk>/reachment/', mentorReachmentListCreate, name='manager_reachment'),
+    path('manager/<int:manager_pk>/task/', mentortaskListCreate, name='manager_task'),
+    path('manager/<int:manager_pk>/taskansver/<int:task_pk>/', mentortaskresultview, name='manager_task_result'),
+    path('manager/<int:manager_pk>/student/<int:student_pk>/report/', mentorReportList, name='manager_student_report'),
 
     # path('role/', RoleView.as_view(),name='role'),
     #

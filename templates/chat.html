@@ -37,8 +37,8 @@
     <br>
     {% if person.role == 'student' %}
     <a class="btn btn-info" href="{% url 'student' student_pk=person.pk %}" role="button">Kabinetga qaytish</a>
-    {% else %}
-        Qo`shish kerak
+    {% elif person.role == 'manager' %}
+    <a class="btn btn-info" href="{% url 'manager' manager_pk=person.pk %}" role="button">Kabinetga qaytish</a>
     {% endif %}
 
 {% endblock content %}

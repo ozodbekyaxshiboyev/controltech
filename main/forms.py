@@ -5,6 +5,11 @@ from .models import (
     Task, TaskResult, Chat,Dayplan, Reachment)
 
 
+class TaskmanagerForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ('for_all_students','user','text','image','source_file',)
+
 class TaskResultForm(forms.ModelForm):
     class Meta:
         model=TaskResult
@@ -26,6 +31,11 @@ class ReachmentForm(forms.ModelForm):
     class Meta:
         model=Reachment
         fields = ('text','image',)
+
+class MentorReachmentForm(forms.ModelForm):
+    class Meta:
+        model=Reachment
+        fields = ('user','text','image',)
 
 
 class ReportForm(forms.ModelForm):
