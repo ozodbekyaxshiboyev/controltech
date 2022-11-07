@@ -11,7 +11,7 @@
         {% for unreport in unreports %}
             <p>
                  <a href="{% url 'student_report_detail' student_pk=student.pk report_pk=unreport.pk %}"> <b style="color: #0a58ca"> {{ unreport.created_at }}</b> </a>
-                    count: <b>{{ unreport.count }}</b>,  book: <b>{{ unreport.book }}</b>, comment: <b>{{ unreport.comment }}</b>, similarity: <b>{{ unreport.similarity }} %</b>
+                    count: <b>{{ unreport.count }}</b> |  book: <b>{{ unreport.book }}</b> | similarity: <b>{{ unreport.similarity }} %</b>
             </p>
             <hr>
         {% endfor %}
@@ -36,7 +36,7 @@
     {% for report in reports %}
     <p>
          <a href="{% url 'student_report_detail' student_pk=student.pk report_pk=report.pk %}"> <b style="color: #0a58ca"> {{ report.created_at }}
-        </b> </a>    count: <b>{{ report.count }}</b>,  book: <b>{{ report.book }}</b>, comment: <b>{{ report.comment }}</b>, similarity: <b>{{ report.similarity }} %</b>
+        </b> </a>    count: <b>{{ report.count }}</b> | book: <b>{{ report.book }}</b> | similarity: <b>{{ report.similarity }} %</b>
     </p>
         <hr>
     {% endfor %}

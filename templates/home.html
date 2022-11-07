@@ -15,24 +15,26 @@
     </div>
 
     <br>
-
+    {% if students %}
     <center><h1 style="color:#5aab19">OUR STUDENTS:</h1></center>
 
     <br>
+
     <h4>
     {% for student in students %}
     <li>
     <div class="jumbotron" style="background-color:darkseagreen">
         {% if student.image %}
-        <img class="rounded-circle" src="{{ student.image.url }}" alt="" width="240" height="240"  />
+        <a href="{% url 'simple_student_report' student_pk=student.pk  %}"><img class="rounded-circle" src="{{ student.image.url }}" alt="" width="240" height="240"  /> </a>
         {% else %}
-        <img class="rounded-circle" src="{% static 'default.png' %}" alt="" width="240" height="240"  />
+        <a href="{% url 'simple_student_report' student_pk=student.pk  %} <img class="rounded-circle" src="{% static 'default.png' %}" alt="" width="240" height="240"  /> </a>
         {% endif %}
         {{ student.full_name }}
     </div>
     </li>
     {% endfor %}
     </h4>
+    {% endif %}
     <br>
     <br>
 
@@ -43,7 +45,7 @@
         <h4>
         {% for reach in reachments %}
         <li>
-        <div class="jumbotron" style="background-color:gold">
+        <div class="jumbotron" style="background-color:#0077b5">
             {% if reach.image %}
             <img class="rounded float-right" src="{{ reach.image.url }}" alt="" width="150" height="150"  />
             {% else %}
@@ -60,6 +62,7 @@
 
     {% endif %}
 
+    {% if users %}
     <center> <h1 style="color:blue">SCORES OF OUR STUDENTS:</h1> </center>
     <h4>
         {% for user in users %}
@@ -80,6 +83,7 @@
         </li>
         {% endfor %}
     </h4>
+    {% endif %}
 
 
 

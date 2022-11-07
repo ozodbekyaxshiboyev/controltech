@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Kuzatuvchi{% endblock title %}
+
+{% block content %}
+    <br/>
+    <a class="btn btn-info" href="{% url 'simple_student_report' student_pk=student.pk %}" role="button">Orqaga</a>
+    <hr>
+        {{ report.created_at }}
+                <h5 style="color: darkgreen">Kimdan: {{ report.user.full_name }} </h5>
+    Count: <b>{{ report.count }}</b> |  Book: <b>{{ report.book }}</b> | From lesson: {{ report.from_lesson }} | To lesson: {{ report.to_lesson }} | Similarity: <b>{{ report.similarity }} %</b>
+     <br><b>Comment:</b> {{ report.comment }}
+
+        <hr><center><h3>Report words : {{ reportitems.count }}</h3></center> <br>
+
+
+        <ul>
+    {% for item in reportitems %}
+    <p>
+        <b>{{ item.word }}</b> ---  {{ item.word_translation }}
+    </p>
+{#        <hr>#}
+    {% endfor %}
+    </ul>
+
+    <br>
+
+
+
+{% endblock content %}

@@ -432,3 +432,25 @@ def mentorReportList(request,manager_pk, student_pk):
         context['reports'] = reports
         context['unreports'] = unreports
         return render(request, template_name='manager_student_report.html', context=context)
+
+
+def simpleReportList(request, student_pk):
+    if request.method == "GET":
+        student = User.objects.get(pk=student_pk)
+        reports = Report.objects.filter(user__id=student_pk, is_verifyed=True).order_by('-pk')[:7]
+        context = dict()
+        context['student'] = student
+        context['reports'] = reports
+        return render(request, template_name='simple_student_report.html', context=context)
+
+
+def simpleReportDetail(request,student_pk, report_pk):
+    if request.method == "GET":
+        student = User.objects.get(pk=student_pk)
+        report = Report.objects.get(pk=report_pk)
+        reportitems = ReportItem.objects.filter(report=report).all()
+        context = dict()
+        context['student'] = student
+        context['report'] = report
+        context['reportitems'] = reportitems
+        return render(request, template_name='simple_report_detail.html', context=context)

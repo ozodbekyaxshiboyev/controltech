@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Kuzatuvchi{% endblock title %}
+
+{% block content %}
+    <center><h3>{{ student.full_name }}ning oxirgi bir haftalik hisobotlari: </h3></center> <br>
+    <br/>
+
+        <ul>
+    {% for report in reports %}
+    <p>
+         <a href="{% url 'simple_report_detail' student_pk=student.pk report_pk=report.pk  %}"> <b style="color: #0a58ca"> {{ report.created_at }}
+        </b> </a>    Count: <b>{{ report.count }}</b> |  Book: <b>{{ report.book }}</b>  | Similarity: <b>{{ report.similarity }} %</b>
+    </p>
+        <hr>
+    {% endfor %}
+    </ul>
+    <br>
+    <a class="btn btn-info" href="{% url 'home' %}" role="button">Bosh sahifa</a>
+
+
+{% endblock content %}

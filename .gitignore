@@ -83,8 +83,6 @@ target/
 __pycache__/
 local_settings.py
 dukamarket
-env/
-.env
 sqlite3
 venv
 venv/
