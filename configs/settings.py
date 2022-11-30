@@ -120,7 +120,8 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static',]
 STATIC_ROOT = BASE_DIR /'staticfiles'
 STATICFILES_STORAGE ='django.contrib.staticfiles.storage.StaticFilesStorage'
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR /'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -132,8 +133,7 @@ LOGOUT_REDIRECT_URL = 'home'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # MEDIA
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR /'media'
+
 
 #CKEDITOR CONFIGS
 CKEDITOR_CONFIGS = {
