@@ -394,7 +394,6 @@ def mentortaskListCreate(request, manager_pk):
         context['form'] = form
         return render(request, template_name='manager_tasks.html', context=context)
     else:
-        print(1111)
         task_form = TaskmanagerForm(data=request.POST)
         if task_form.is_valid():
             task_form.save(commit=False)
